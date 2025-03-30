@@ -8,7 +8,6 @@ app.use(express.json());
 const authRoutes = require('./routes/authRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 // =======================
-console.log(1)
 
 // Routes
 app.use('/auth', authRoutes); // Use authRoutes for authentication

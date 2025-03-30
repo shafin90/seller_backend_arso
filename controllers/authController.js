@@ -1,9 +1,24 @@
-const authService = require('../services/authServices');
+const { verifyEmailBySendingOtp } = require('../utils/verifyEmailBySendingOtp');
+const { verifyPhoneNumberBySendingOtp } = require('../utils/verifyPhoneNumberBySendingOtp');
+
+
 
 async function register(req, res) {
   try {
-    const seller = await authService.register(req.body);
-    res.status(201).json({ message: 'Registration successful', seller });
+    // take input as mobile number or email to send otp -------registrationInput
+    const { registrationInput } = req.body;
+
+    // 1. ======if mobile number, then do mobile number otp verification
+    if (registrationInput.includes("@")) {
+      await verifyEmailBySendingOtp(registrationInput)
+    }
+    // =================================================================
+
+    // 2. =======if eamil, then do email verification through otp 
+    else {
+      await verifyPhoneNumberBySendingOtp(registrationInput)
+    }
+    // ==========================================================
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -11,8 +26,7 @@ async function register(req, res) {
 
 async function login(req, res) {
   try {
-    const { token, seller } = await authService.login(req.body);
-    res.json({ message: 'Login successful', token, seller });
+
   } catch (error) {
     res.status(401).json({ error: error.message });
   }
@@ -20,8 +34,7 @@ async function login(req, res) {
 
 async function getProfile(req, res) {
   try {
-    const seller = await authService.getProfile(req.params.id);
-    res.json(seller);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -29,8 +42,7 @@ async function getProfile(req, res) {
 
 async function updateProfile(req, res) {
   try {
-    const seller = await authService.updateProfile(req.params.id, req.body);
-    res.json(seller);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
